@@ -1,12 +1,19 @@
 require("dotenv").config();
 
 const express = require("express");
+const cors = require("cors");
 const nodemailer = require("nodemailer");
+
 const app = express();
 const PORT = 6000;
 
+// Enable CORS for all origins (or specify your frontend origin instead of "*")
+app.use(cors());
+
+// Middleware
 app.use(express.json());
 
+// Basic Route
 app.get("/", (req, res) => {
   res.send("Server is running on port 6000");
 });
@@ -21,7 +28,6 @@ app.post("/api/contact", async (req, res) => {
       .json({ success: false, message: "All fields are required" });
   }
 
-  // Create transporter
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -30,7 +36,6 @@ app.post("/api/contact", async (req, res) => {
     },
   });
 
-  // Email content
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: "bilaljee684@gmail.com",
@@ -54,6 +59,7 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
+// Test Route
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from the API!" });
 });
